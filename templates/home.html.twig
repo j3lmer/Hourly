@@ -1,0 +1,72 @@
+{% extends "base.html.twig" %}
+
+
+{% block title %}Select a project{% endblock %}
+
+{% block topbuttons %}
+    <a class="btn btn-dark" , href="{{ path('app_newproject') }}">Add new project</a>
+    <a class="btn btn-dark" , href="{{ path('app_logout') }}">logout</a>
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="container" id="ProjectSelector">
+
+        <div class="row justify-content-center my-2">
+            <div class="col-lg d-flex justify-content-center mt-5">
+                <h2>Hello {{ app.user.username }}</h2>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg d-flex justify-content-center">
+                <p>Pick or add a project</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center projectrow my-4 gx-1 ">
+            {% if projectlist is empty %}
+                <div class="col-lg-3 dark border rounded m-2">
+                    <h4 class=" text-light text-center py-4">It looks like you have no active projects!</h4>
+                    <p class="text-light text-center">Click <a href="{{ path('app_newproject') }}">here</a> to add a new
+                        one!</p>
+                </div>
+            {% else %}
+                {% for p in projectlist %}
+                    <div class="col-lg-3 dark border rounded m-2">
+
+                        <div class="row top-bar d-flex flex-row-reverse">
+                            <a class="btn btn-danger btn-sm"
+                               href="{{ path('app_delete', {projectName: p.name}) }}">X</a>
+                        </div>
+
+
+                        <div class="row mid-bar d-flex justify-content-center my-2 ">
+                            {% if p.name | length > 13 %}
+                                <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectname: p.name }) }}"
+                                   , style="font-size: larger">
+                                    {{ p.name | slice(0,13) }}...
+                                </a>
+                            {% else %}
+                                <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectname: p.name}) }}" ,
+                                   style="font-size: larger">
+                                    {{ p.name }}
+                                </a>
+                            {% endif %}
+                        </div>
+
+
+                        <div class="row d-flex align-items-center pt-2 border-top border-secondary mt-5 ">
+                            <div class="col-md d-flex justify-content-center ">
+                                <p class="text-light">Total time: {{ hourlist[loop.index0] }}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

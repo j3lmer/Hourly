@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Are you sure?{% endblock %}
+
+{% block topbuttons %}
+    <a class="btn btn-dark" , href="{{ path('app_mainscreen') }}">Back</a>
+{% endblock %}
+
+
+{% block body %}
+
+
+    <div class="container ">
+        <div class="row d-flex justify-content-center rounded  mt-5 dark">
+            <div class="col-md d-flex justify-content-center my-5">
+                <div class="row">
+                    <div class="col-md">
+                        <h1 class="text-light">Are you sure you want to delete <span
+                                    class="text-primary">{{ projectname }}</span>?</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-flex justify-content-center rounded">
+            <div class="col-md d-flex justify-content-center my-5">
+                <div class="row">
+                    <div class="col-md">
+                        <a class="btn btn-danger btn-lg text-light"
+                           href="{{ path('app_deleted', {projectName : projectname}) }}">yes</a>
+                    </div>
+                    <div class="col-md">
+                        <a class="btn bg-secondary btn-lg text-light" href="{{ path('app_mainscreen') }}">no</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
