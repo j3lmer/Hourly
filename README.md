@@ -1,4 +1,4 @@
-# BOUW7_PROGRAM
+# Hourly
 
 
 This is a program which can be used as a time tracking tool.
