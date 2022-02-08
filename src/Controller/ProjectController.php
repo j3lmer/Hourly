@@ -3,12 +3,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Business\HourManager;
 use App\Business\ProjectManager;
 use App\Entity\Project;
+use App\Form\ProjectModType;
 use App\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,7 +34,7 @@ class ProjectController extends AbstractController
     /**
      * @Route("projects/{projectId}", name="app_project")
      */
-    public function ProjectPage($projectId)
+    public function ProjectPage($projectId): Response
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -104,6 +105,44 @@ class ProjectController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_mainscreen');
+    }
+
+
+    //--------------------------------------------------------------------------------------------------------------
+    /*
+     * gets this project
+     * creates a form if the project exists, otherwise it returns an error page
+     * submits and changes database
+     */
+
+    /**
+     * @Route("projects/{projectId}/modify", name="app_projectNameMod")
+     */
+    public function ModifyName($projectId, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $pj = $em->getRepository(Project::class)->findOneBy(['id' => $projectId, 'user' => $this->getUser()]);
+
+        if ($pj) {
+            $form = $this->createForm(ProjectModType::class, $pj);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                //store to database
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($pj);
+                $em->flush();
+                return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
+            }
+
+            return $this->render('modification/modName.html.twig', [
+                'name_form' => $form->createView(),
+                'projectId' => $pj->getId()
+            ]);
+        } else {
+            return $this->render('error/project_not_found.html.twig');
+        }
     }
 
 }

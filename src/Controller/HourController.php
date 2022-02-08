@@ -6,6 +6,7 @@ use App\Entity\Project;
 use App\Entity\ProjectHours;
 use App\Form\AddHoursClassType;
 use App\Business\HourManager;
+use App\Form\HourModType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManager;
 use JetBrains\PhpStorm\Pure;
@@ -101,5 +102,66 @@ class HourController extends AbstractController
         $em->remove($hour);
         $em->flush();
         return $this->redirectToRoute('app_project', ['projectId' => $projectId]);
+    }
+
+
+    /*
+     * retrieves this project and hour entry
+     * creates form based on ProjectHours
+     * when form is submitted and valid
+     * checks if end time is later than start time, if not; flashes an error
+     * otherwise, calculates time difference and sets it as duration on the hour entry
+     * adds the hour entry to the project
+     * saves all to the database
+     */
+
+    /**
+     * @Route("projects/{pjn}/{hkey}/modify", name="app_projectHourMod")
+     */
+
+    public function ModifyHours($pjn, $hkey, Request $request): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $hour_entry = $em->getRepository(ProjectHours::class)->findOneBy(['id' => $hkey]);
+        $pj = $em->getRepository(Project::class)->findOneBy(['name' => $pjn, 'user' => $this->getUser()]);
+
+        $timeStart = $hour_entry->getTimestampStart();
+        $timeEnd = $hour_entry->getTimestampEnd();
+
+        $this->hourManager->formatTimeStartAndEnd($timeStart, $timeEnd, $hour_entry);
+
+        $form = $this->createForm(HourModType::class, $hour_entry);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $start = $hour_entry->getTimestampStart();
+            $end = $hour_entry->getTimestampEnd();
+
+            if ($end > $start) {
+                $interval = $start->diff($end);
+
+                $hour_entry->setDuration($interval);
+                $pj->addProjectHours($hour_entry);
+
+
+                //store to database
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($hour_entry);
+                $em->persist($pj);
+                $em->flush();
+                return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
+            } else {
+                $this->addFlash('error', 'End time must be later than start time!');
+            }
+
+
+        }
+
+        return $this->render('modification/modHours.html.twig', [
+            'hours_form' => $form->createView(),
+            'projectId' => $pj->getId()
+        ]);
     }
 }
