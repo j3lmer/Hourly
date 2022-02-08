@@ -12,7 +12,6 @@ class ProjectManager
     /*
      * adds an extra variable to each entry with its duration in a nice format to display
      */
-
     public function configureEntryDisplayDuration($entry)
     {
         foreach ($entry as $e => $data) {
@@ -29,7 +28,6 @@ class ProjectManager
     /*
      * simple function to check if a project with this name exists under this user
      */
-
     public function checkIfUserExists($pjn, $em, $user): bool
     {
         if ($em->getRepository(Project::class)->findOneBy(['user' => $user, 'name' => $pjn])) {
