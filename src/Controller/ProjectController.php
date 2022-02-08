@@ -137,8 +137,8 @@ class ProjectController extends AbstractController
             }
 
             return $this->render('Project/edit.html.twig', [
-                'name_form' => $form->createView(),
-                'projectId' => $pj->getId(),
+                'name_form'   => $form->createView(),
+                'projectId'   => $pj->getId(),
                 'projectName' => $pj->getName()
             ]);
         } else {
