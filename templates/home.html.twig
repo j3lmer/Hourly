@@ -37,15 +37,16 @@
                     <div class="col-lg-3 dark border rounded m-2">
 
                         <div class="row top-bar d-flex flex-row-reverse">
-                            <a class="btn btn-danger btn-sm"
-                               href="{{ path('app_delete', {projectId: p.id}) }}">X</a>
+                            <a class="btn btn-danger btn-sm" href="{{ path('app_delete', {projectId: p.id}) }}">
+                                <i class="far fa-times-circle"></i>
+                            </a>
                         </div>
 
 
                         <div class="row mid-bar d-flex justify-content-center my-2 ">
                             {% if p.name | length > 13 %}
                                 <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectId: p.id }) }}"
-                                    style="font-size: larger">
+                                   style="font-size: larger">
                                     {{ p.name | slice(0,13) }}...
                                 </a>
                             {% else %}
