@@ -20,15 +20,15 @@
 {% block body %}
     <div class="container justify-content-center" id="LocalProject">
     <div class="row justify-content-center m-5">
-        <div class="col-lg-11 d-flex align-items-center flex-column rounded dark">
+        <div class="col-lg-11 d-flex align-items-center flex-column rounded dark pb-3">
             <div class="row border-bottom border-dark py-3">
-                <div class="col-md my-4 ">
+                <div class="col-md mt-4 ">
                     <h1 class="text-light">{{ projectName }}</h1>
                 </div>
             </div>
 
-            <div class="row pt-2">
-                <div class="col-md mt-4 ">
+            <div class="row">
+                <div class="col-md mt-3 ">
                     <h3 class="text-light">Total amount of time: {{ totalHours }}</h3>
                 </div>
             </div>
@@ -91,23 +91,24 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="row top-bar d-flex flex-row-reverse mt-2">
-                <a class="btn btn-info" href="{{ path('app_projectNameMod', {projectId: projectId}) }}">Modify name</a>
-            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md"></div>
+                    <div class="col-md">
+                        <a class="btn btn-info" href="{{ path('app_projectNameMod', {projectId: projectId}) }}">Modify name</a>
+                    </div>
 
-            <div class="row py-3">
-                <div class="col-md">
-                    <a class="btn btn-info" href={{ path('app_newHours', {project: projectName} ) }}>Add hours</a>
+                    <div class="col-md">
+                        <a class="btn btn-info" href={{ path('app_newHours', {project: projectName} ) }}>Add hours</a>
+                    </div>
+
+                    <div class="col-md">
+                        <a class="btn btn-danger" href={{ path('app_delete', {projectId: projectId} ) }}>  Delete project</a>
+                    </div>
+
+                    <div class="col-md"></div>
                 </div>
             </div>
-
-            <div class="row mb-4">
-                <div class="col-md">
-                    <a class="btn btn-danger" href={{ path('app_delete', {projectId: projectId} ) }}>  Delete project</a>
-                </div>
-            </div>
-
-
         </div>
     </div>
 {% endblock %}

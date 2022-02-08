@@ -40,7 +40,6 @@ class ProjectController extends AbstractController
         $user = $this->getUser();
 
         $project = $this->projectRepository->find($projectId);
-        dump($project);
         $projectName = $project->getName();
 
         $exists = $this->projectManager->checkIfUserExists($projectName, $em, $user);
