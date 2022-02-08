@@ -3,7 +3,7 @@
 {% block title %}Are you sure?{% endblock %}
 
 {% block topbuttons %}
-    <a class="btn btn-dark" , href="{{ path('app_project', {projectname: projectname}) }}">Back</a>
+    <a class="btn btn-dark" href="{{ path('app_project', {projectId: projectId}) }}">Back</a>
 {% endblock %}
 
 
@@ -31,11 +31,11 @@
                 <div class="row">
                     <div class="col-md">
                         <a class="btn btn-danger btn-lg text-light"
-                           href="{{ path('app_hour_deleted', {projectName: projectname, hoursId: hour.id}) }}">yes</a>
+                           href="{{ path('app_hour_deleted', {projectId: projectId, hoursId: hour.id}) }}">yes</a>
                     </div>
                     <div class="col-md">
                         <a class="btn bg-secondary btn-lg text-light"
-                           href="{{ path('app_project', {projectname: projectname}) }}">no</a>
+                           href="{{ path('app_project', {projectId: projectId}) }}">no</a>
                     </div>
                 </div>
             </div>

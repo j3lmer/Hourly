@@ -2,7 +2,7 @@
 
 
 {% block title %}
-    {{ thisprojectname }}
+    {{ projectName }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -23,13 +23,13 @@
         <div class="col-lg-11 d-flex align-items-center flex-column rounded dark">
             <div class="row border-bottom border-dark py-3">
                 <div class="col-md my-4 ">
-                    <h1 class="text-light">{{ thisprojectname }}</h1>
+                    <h1 class="text-light">{{ projectName }}</h1>
                 </div>
             </div>
 
             <div class="row pt-2">
                 <div class="col-md mt-4 ">
-                    <h3 class="text-light">Total amount of time: {{ totalhours }}</h3>
+                    <h3 class="text-light">Total amount of time: {{ totalHours }}</h3>
                 </div>
             </div>
 
@@ -72,14 +72,14 @@
 
                                     <td class="text-center">
                                         <a class="btn btn-danger btn-sm align-self-center"
-                                           href="{{ path('app_hour_delete', {projectName:thisprojectname, hoursId: h.id}) }}">
+                                           href="{{ path('app_hour_delete', {projectId: projectId, hoursId: h.id}) }}">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
 
                                     <td class="text-center">
                                         <a class="btn btn-info btn-sm"
-                                           href="{{ path('app_projectHourMod', {pjn: thisprojectname, hkey: h.id}) }}">
+                                           href="{{ path('app_projectHourMod', {pjn: projectName, hkey: h.id}) }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </td>
@@ -92,18 +92,18 @@
                 </div>
             </div>
             <div class="row top-bar d-flex flex-row-reverse mt-2">
-                <a class="btn btn-info" href="{{ path('app_projectNameMod', {pjn: thisprojectname}) }}">Modify name</a>
+                <a class="btn btn-info" href="{{ path('app_projectNameMod', {projectId: projectId}) }}">Modify name</a>
             </div>
 
             <div class="row py-3">
                 <div class="col-md">
-                    <a class="btn btn-info" href={{ path('app_newHours', {project: thisprojectname} ) }}>Add hours</a>
+                    <a class="btn btn-info" href={{ path('app_newHours', {project: projectName} ) }}>Add hours</a>
                 </div>
             </div>
 
             <div class="row mb-4">
                 <div class="col-md">
-                    <a class="btn btn-danger" href={{ path('app_delete', {projectName: thisprojectname} ) }}>  Delete project</a>
+                    <a class="btn btn-danger" href={{ path('app_delete', {projectId: projectId} ) }}>  Delete project</a>
                 </div>
             </div>
 

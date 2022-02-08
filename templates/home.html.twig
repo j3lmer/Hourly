@@ -4,8 +4,8 @@
 {% block title %}Select a project{% endblock %}
 
 {% block topbuttons %}
-    <a class="btn btn-dark" , href="{{ path('app_newproject') }}">Add new project</a>
-    <a class="btn btn-dark" , href="{{ path('app_logout') }}">logout</a>
+    <a class="btn btn-dark" href="{{ path('app_newproject') }}">Add new project</a>
+    <a class="btn btn-dark" href="{{ path('app_logout') }}">logout</a>
 {% endblock %}
 
 
@@ -38,18 +38,18 @@
 
                         <div class="row top-bar d-flex flex-row-reverse">
                             <a class="btn btn-danger btn-sm"
-                               href="{{ path('app_delete', {projectName: p.name}) }}">X</a>
+                               href="{{ path('app_delete', {projectId: p.id}) }}">X</a>
                         </div>
 
 
                         <div class="row mid-bar d-flex justify-content-center my-2 ">
                             {% if p.name | length > 13 %}
-                                <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectname: p.name }) }}"
-                                   , style="font-size: larger">
+                                <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectId: p.id }) }}"
+                                    style="font-size: larger">
                                     {{ p.name | slice(0,13) }}...
                                 </a>
                             {% else %}
-                                <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectname: p.name}) }}" ,
+                                <a class="btn btn-dark btn-lg" href="{{ path('app_project', {projectId: p.id}) }}"
                                    style="font-size: larger">
                                     {{ p.name }}
                                 </a>

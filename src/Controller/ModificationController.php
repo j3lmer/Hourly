@@ -85,14 +85,14 @@ class ModificationController extends AbstractController
      */
 
     /**
-     * @Route("projects/{pjn}/modify", name="app_projectNameMod")
+     * @Route("projects/{projectId}/modify", name="app_projectNameMod")
      */
 
-    public function ModifyName($pjn, Request $request): Response
+    public function ModifyName($projectId, Request $request): Response
     {
         $em = $this->getDoctrine()->getManager();
 
-        $pj = $em->getRepository(Project::class)->findOneBy(['name' => $pjn, 'user' => $this->getUser()]);
+        $pj = $em->getRepository(Project::class)->findOneBy(['id' => $projectId, 'user' => $this->getUser()]);
 
         if ($pj) {
             $form = $this->createForm(ProjectModType::class, $pj);
@@ -103,12 +103,12 @@ class ModificationController extends AbstractController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($pj);
                 $em->flush();
-                return $this->redirectToRoute('app_project', ['projectname' => $pj->getName()]);
+                return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
             }
 
             return $this->render('modification/mod_name.html.twig', [
                 'name_form' => $form->createView(),
-                'projectname' => $pjn
+                'projectId' => $pj->getId()
             ]);
         } else {
             return $this->render('error/project_not_found.html.twig');

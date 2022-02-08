@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ProjectHours
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\ProjectHoursRepository")
  */
 class ProjectHours
 {

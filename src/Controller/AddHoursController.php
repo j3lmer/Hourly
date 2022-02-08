@@ -5,6 +5,10 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\ProjectHours;
 use App\Form\AddHoursClassType;
+use App\Business\HourManager;
+use App\Repository\ProjectRepository;
+use Doctrine\ORM\EntityManager;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,45 +32,41 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AddHoursController extends AbstractController
 {
-    #[Route('projects/{project}/new', name: 'app_newHours')]
-    public function index(Request $request, $project): Response
+    private HourManager $hourManager;
+    private ProjectRepository $projectRepository;
+
+    public function __construct(HourManager $hourManager, ProjectRepository $projectRepository)
     {
-        $em = $this->getDoctrine()->getManager();
+        $this->hourManager = $hourManager;
+        $this->projectRepository = $projectRepository;
+    }
+
+    #[Route('projects/{project}/new', name: 'app_newHours')]
+    public function createNewHours(Request $request, $project): Response
+    {
         $pjn = html_entity_decode($project);
+        $hourEntry = new ProjectHours();
 
-        $hour_entry = new ProjectHours();
+        $pj = $this->projectRepository->findByUserAndName($this->getUser(), $pjn);
+        $hourEntry->setProject($pj);
 
-        $pj = $em->getRepository(Project::class)->findOneBy(['name' => $pjn, 'user' => $this->getUser()]);
-        $hour_entry->setProject($pj);
-
-        $form = $this->createForm(AddHoursClassType::class, $hour_entry);
+        $form = $this->createForm(AddHoursClassType::class, $hourEntry);
         $form->handleRequest($request);
 
+        $handled = $this->hourManager->handleAddHoursForm($form, $hourEntry, $pj);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $start = $hour_entry->getTimestampStart();
-            $end = $hour_entry->getTimestampEnd();
-
-            if ($end > $start) {
-                $interval = $start->diff($end);
-
-                $hour_entry->setDuration($interval);
-                $hour_entry->setProject($pj);
-                $pj->addProjectHours($hour_entry);
-
-                //store to database
-                $em->persist($hour_entry);
-                $em->persist($pj);
-                $em->flush();
-                return $this->redirectToRoute('app_project', ['projectname' => $pj->getName()]);
-            } else {
+        switch($handled){
+            case 'notHandled':
                 $this->addFlash('error', 'End time must be later than start time!');
-            }
+                break;
+            case 'handled':
+                echo $pj->getId();
+                return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
         }
 
         return $this->render('add_hours/index.html.twig', [
             'hours_form' => $form->createView(),
-            'projectname' => $pjn
+            'projectId' => $pj->getId()
         ]);
     }
 }

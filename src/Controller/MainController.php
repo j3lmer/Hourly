@@ -3,11 +3,20 @@
 namespace App\Controller;
 
 use App\Entity\Project;
+use App\Repository\ProjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+
+    private ProjectRepository $projectRepository;
+
+    public function __construct(ProjectRepository $projectRepository)
+    {
+        $this->projectRepository = $projectRepository;
+    }
+
     //--------------------------------------------------------------------------------------------------------------
     /*
      * redirects the user from '/' to login page
@@ -55,26 +64,32 @@ class MainController extends AbstractController
      */
 
     /**
-     * @Route("projects/{projectname}", name="app_project")
+     * @Route("projects/{projectId}", name="app_project")
      */
-    public function ProjectPage($projectname)
+    public function ProjectPage($projectId)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
-        $exists = $this->checkIfUserExists($projectname, $em, $user);
 
-        $project = $em->getRepository(Project::class)->findOneBy(['name' => $projectname, 'user' => $user]);
+        $project = $this->projectRepository->find($projectId);
+        dump($project);
+        $projectName = $project->getName();
+
+        $exists = $this->checkIfUserExists($projectName, $em, $user);
+
+        $project = $em->getRepository(Project::class)->findOneBy(['name' => $projectName, 'user' => $user]);
         if ($exists) {
-            $total_hour = $this->getTotalHours($project);
+            $totalHours = $this->getTotalHours($project);
 
-            $hour_entry = $project->getProjectHours()->toArray();
+            $hourEntry = $project->getProjectHours()->toArray();
 
-            $this->configureEntryDisplayDuration($hour_entry);
+            $this->configureEntryDisplayDuration($hourEntry);
 
             return $this->render('project.html.twig', [
-                'thisprojectname' => $projectname,
-                'hours' => $hour_entry,
-                'totalhours' => $total_hour
+                'projectName' => $projectName,
+                'projectId' => $projectId,
+                'hours' => $hourEntry,
+                'totalHours' => $totalHours
             ]);
         } else {
             return $this->render('error/project_not_found.html.twig');
