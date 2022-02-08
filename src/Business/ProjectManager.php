@@ -16,8 +16,8 @@ class ProjectManager
     public function configureEntryDisplayDuration($entry)
     {
         foreach ($entry as $e => $data) {
-            $start = $data->getTimestampStart();
-            $end = $data->getTimestampEnd();
+            $start    = $data->getTimestampStart();
+            $end      = $data->getTimestampEnd();
             $interval = $start->diff($end);
 
             $data->entryDuration = ($interval->days * 24) + $interval->h . "h, " . $interval->i . "m";
@@ -57,8 +57,8 @@ class ProjectManager
         $hours = $project->getProjectHours()->toArray();
 
         foreach ($hours as $hour => $data) {
-            $start = $data->getTimestampStart();
-            $end = $data->getTimestampEnd();
+            $start    = $data->getTimestampStart();
+            $end      = $data->getTimestampEnd();
             $interval = $start->diff($end);
 
             $total_hour[0] += ($interval->days * 24) + $interval->h;

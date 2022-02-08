@@ -15,8 +15,10 @@ abstract class AbstractRepository extends EntityRepository
 {
     final public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($em, new ClassMetadata($this->getEntityClassName(), new UnderscoreNamingStrategy(\CASE_LOWER, true)));
+        parent::__construct($em,
+            new ClassMetadata($this->getEntityClassName(), new UnderscoreNamingStrategy(\CASE_LOWER, true)));
     }
+
     /**
      * Tells the EntityManager to make an instance managed and persistent.
      *

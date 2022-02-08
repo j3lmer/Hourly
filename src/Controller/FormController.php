@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MakeProjectFormController extends AbstractController
+class FormController extends AbstractController
 {
 
     /*
@@ -28,7 +28,10 @@ class MakeProjectFormController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $potentialSameNameProjects = $this->getDoctrine()->getRepository(Project::class)->findBy(['user' => $this->getUser(), 'name' => $pj->getName()]);
+            $potentialSameNameProjects = $this->getDoctrine()->getRepository(Project::class)->findBy([
+                'user' => $this->getUser(),
+                'name' => $pj->getName()
+            ]);
 
             if (!empty($potentialSameNameProjects)) {
                 //display message that projects cant have the same name

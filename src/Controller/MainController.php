@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
 
-    private ProjectManager    $projectManager;
+    private ProjectManager $projectManager;
 
 
     public function __construct(ProjectManager $projectManager)
@@ -42,8 +42,8 @@ class MainController extends AbstractController
      */
     public function Main()
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
+        $em       = $this->getDoctrine()->getManager();
+        $user     = $this->getUser();
         $projects = $em->getRepository(Project::class)->findBy(['user' => $user]);
 
         $hourList = [];
@@ -56,13 +56,9 @@ class MainController extends AbstractController
 
         return $this->render('home.html.twig', [
             'projectlist' => $projects,
-            'hourlist' => $hourList
+            'hourlist'    => $hourList
         ]);
     }
-
-
-
-
 
 
 }

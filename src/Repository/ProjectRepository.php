@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProjectRepository extends AbstractRepository
 {
-    public function findByUserAndName(UserInterface $user ,string $projectName): Project
+    public function findByUserAndName(UserInterface $user, string $projectName): Project
     {
         return parent::findOneBy(['name' => $projectName, 'user' => $user]);
     }

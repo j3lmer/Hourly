@@ -124,10 +124,10 @@ class HourController extends AbstractController
         $em = $this->getDoctrine()->getManager();
 
         $hour_entry = $em->getRepository(ProjectHours::class)->findOneBy(['id' => $hkey]);
-        $pj = $em->getRepository(Project::class)->findOneBy(['name' => $pjn, 'user' => $this->getUser()]);
+        $pj         = $em->getRepository(Project::class)->findOneBy(['name' => $pjn, 'user' => $this->getUser()]);
 
         $timeStart = $hour_entry->getTimestampStart();
-        $timeEnd = $hour_entry->getTimestampEnd();
+        $timeEnd   = $hour_entry->getTimestampEnd();
 
         $this->hourManager->formatTimeStartAndEnd($timeStart, $timeEnd, $hour_entry);
 
@@ -137,7 +137,7 @@ class HourController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $start = $hour_entry->getTimestampStart();
-            $end = $hour_entry->getTimestampEnd();
+            $end   = $hour_entry->getTimestampEnd();
 
             if ($end > $start) {
                 $interval = $start->diff($end);
@@ -161,7 +161,7 @@ class HourController extends AbstractController
 
         return $this->render('modification/modHours.html.twig', [
             'hours_form' => $form->createView(),
-            'projectId' => $pj->getId()
+            'projectId'  => $pj->getId()
         ]);
     }
 }

@@ -16,12 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProjectController extends AbstractController
 {
 
-    private ProjectManager $projectManager;
+    private ProjectManager    $projectManager;
     private ProjectRepository $projectRepository;
 
     public function __construct(ProjectManager $projectManager, ProjectRepository $projectRepository)
     {
-        $this->projectManager = $projectManager;
+        $this->projectManager    = $projectManager;
         $this->projectRepository = $projectRepository;
     }
 
@@ -36,7 +36,7 @@ class ProjectController extends AbstractController
      */
     public function ProjectPage($projectId): Response
     {
-        $em = $this->getDoctrine()->getManager();
+        $em   = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
         $project = $this->projectRepository->find($projectId);
@@ -55,9 +55,9 @@ class ProjectController extends AbstractController
 
             return $this->render('project.html.twig', [
                 'projectName' => $projectName,
-                'projectId' => $projectId,
-                'hours' => $hourEntry,
-                'totalHours' => $totalHours
+                'projectId'   => $projectId,
+                'hours'       => $hourEntry,
+                'totalHours'  => $totalHours
             ]);
         } else {
             return $this->render('error/project_not_found.html.twig');
@@ -76,12 +76,12 @@ class ProjectController extends AbstractController
     public function DeleteProject(int $projectId): Response
     {
         if ($project = $this->getDoctrine()->getRepository(Project::class)->findOneBy([
-            'id' => $projectId,
+            'id'   => $projectId,
             'user' => $this->getUser()
         ])) {
             return $this->render('deletion/delete.html.twig', [
                 'projectName' => $project->getName(),
-                'projectId' => $projectId
+                'projectId'   => $projectId
             ]);
         }
         return $this->render('error/project_not_found.html.twig');
