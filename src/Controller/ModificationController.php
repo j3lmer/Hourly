@@ -62,7 +62,7 @@ class ModificationController extends AbstractController
                 $em->persist($hour_entry);
                 $em->persist($pj);
                 $em->flush();
-                return $this->redirectToRoute('app_project', ['projectname' => $pj->getName()]);
+                return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
             } else {
                 $this->addFlash('error', 'End time must be later than start time!');
             }
@@ -70,9 +70,9 @@ class ModificationController extends AbstractController
 
         }
 
-        return $this->render('modification/mod_hours.html.twig', [
+        return $this->render('modification/modHours.html.twig', [
             'hours_form' => $form->createView(),
-            'projectname' => $pjn
+            'projectId' => $pj->getId()
         ]);
     }
 
@@ -106,7 +106,7 @@ class ModificationController extends AbstractController
                 return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
             }
 
-            return $this->render('modification/mod_name.html.twig', [
+            return $this->render('modification/modName.html.twig', [
                 'name_form' => $form->createView(),
                 'projectId' => $pj->getId()
             ]);
