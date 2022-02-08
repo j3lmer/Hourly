@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ projectName }}
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+          integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+{% endblock %}
+
+
+{% block topbuttons %}
+    <a class="btn btn-dark" href="{{ path('app_mainscreen') }}">Back</a>
+{% endblock %}
+
+{% block body %}
+<div class="container justify-content-center">
+    <div class="row col-lg-11 flex-row-reverse mx-3 ">
+        <div>
+            <a class="btn btn-danger btn-md mt-2 ml-2" href="{{ path('app_delete', {projectId: projectId}) }}">
+                <i class="far fa-times-circle"></i>
+            </a>
+        </div>
+        <div>
+            <a class="btn btn-info btn-md mt-2" href="{{ path('app_projectNameMod', {projectId: projectId}) }}">
+                <i class="fas fa-edit"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container justify-content-center" id="LocalProject">
+    <div class="row justify-content-center mx-5 mt-3">
+        <div class="col-lg-11 d-flex align-items-center flex-column rounded dark pb-3">
+            <div class="row border-bottom border-dark py-3">
+                <div class="col-md mt-4 ">
+                    <h1 class="text-light">{{ projectName }}</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md">
+                    <h4 class="text-light"> "{{ comment }}"</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md mt-3 ">
+                    <h3 class="text-light">Total amount of time: {{ totalHours }}</h3>
+                </div>
+            </div>
+
+
+            <div class="row mx-5 my-2">
+                <div class="col-md">
+                    {% if hours is not empty %}
+                        <table class="table table-hover table-dark table-striped table-borderless mt-4 rounded ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Starting time</th>
+                                    <th scope="col">End time</th>
+                                    <th scope="col">Duration</th>
+                                    <th scope="col">Processed</th>
+                                    <th scope="col">Delete</th>
+                                    <th scope="col">Modify</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for h in hours %}
+                                    <tr>
+                                        <th class="text-center" scope="row">{{ loop.index }}</th>
+                                        <td class="text-center">{{ h.timestampStart | format_datetime('short', 'short', locale='en') }}</td>
+                                        <td class="text-center">{{ h.timestampEnd | format_datetime('short', 'short', locale='en') }}</td>
+
+                                        <td class="text-center">{{ h.entryDuration }}</td>
+
+                                        <td class="text-center">
+                                            {% if h is defined %}
+                                                <i class="fas fa-check"></i>
+                                            {% else %}
+                                                <i class="fas fa-times"></i>
+                                            {% endif %}
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a class="btn btn-danger btn-sm align-self-center"
+                                               href="{{ path('app_hour_delete', {projectId: projectId, hoursId: h.id}) }}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <a class="btn btn-info btn-sm"
+                                               href="{{ path('app_projectHourMod', {pjn: projectName, hkey: h.id}) }}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md d-flex align-items-center flex-column">
+                        <a class="btn btn-info" href={{ path('app_newHours', {project: projectName} ) }}>Add hours</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

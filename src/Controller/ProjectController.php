@@ -39,7 +39,7 @@ class ProjectController extends AbstractController
         $em   = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $project = $this->projectRepository->find($projectId);
+        $project     = $this->projectRepository->find($projectId);
         $projectName = $project->getName();
 
         $exists = $this->projectManager->checkIfUserExists($projectName, $em, $user);
@@ -52,11 +52,12 @@ class ProjectController extends AbstractController
 
             $this->projectManager->configureEntryDisplayDuration($hourEntry);
 
-            return $this->render('project.html.twig', [
+            return $this->render('Project/project.html.twig', [
                 'projectName' => $projectName,
                 'projectId'   => $projectId,
                 'hours'       => $hourEntry,
-                'totalHours'  => $totalHours
+                'totalHours'  => $totalHours,
+                'comment'     => $project->getComment() ?? ''
             ]);
         } else {
             return $this->render('error/project_not_found.html.twig');
@@ -78,7 +79,7 @@ class ProjectController extends AbstractController
             'id'   => $projectId,
             'user' => $this->getUser()
         ])) {
-            return $this->render('deletion/delete.html.twig', [
+            return $this->render('Project/delete.html.twig', [
                 'projectName' => $project->getName(),
                 'projectId'   => $projectId
             ]);
@@ -135,9 +136,10 @@ class ProjectController extends AbstractController
                 return $this->redirectToRoute('app_project', ['projectId' => $pj->getId()]);
             }
 
-            return $this->render('modification/modName.html.twig', [
+            return $this->render('Project/edit.html.twig', [
                 'name_form' => $form->createView(),
-                'projectId' => $pj->getId()
+                'projectId' => $pj->getId(),
+                'projectName' => $pj->getName()
             ]);
         } else {
             return $this->render('error/project_not_found.html.twig');

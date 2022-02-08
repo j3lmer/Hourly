@@ -35,6 +35,11 @@ class Project
      */
     private $project_hours;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $comment;
+
     public function addProjectHours(ProjectHours $ph)
     {
         $this->project_hours[] = $ph;
@@ -88,6 +93,16 @@ class Project
         $user->addProject($this);
 
         $this->user = $user;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(string $comment): void
+    {
+        $this->comment = $comment;
     }
 
     public function __construct()

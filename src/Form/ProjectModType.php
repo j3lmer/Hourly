@@ -14,6 +14,7 @@ class ProjectModType extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('comment')
             ->add('submit', SubmitType::class);
     }
 
