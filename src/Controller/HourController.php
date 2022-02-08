@@ -10,6 +10,7 @@ use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManager;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,21 +31,21 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @package App\Controller
  */
-class AddHoursController extends AbstractController
+class HourController extends AbstractController
 {
-    private HourManager $hourManager;
+    private HourManager       $hourManager;
     private ProjectRepository $projectRepository;
 
     public function __construct(HourManager $hourManager, ProjectRepository $projectRepository)
     {
-        $this->hourManager = $hourManager;
+        $this->hourManager       = $hourManager;
         $this->projectRepository = $projectRepository;
     }
 
     #[Route('projects/{project}/new', name: 'app_newHours')]
     public function createNewHours(Request $request, $project): Response
     {
-        $pjn = html_entity_decode($project);
+        $pjn       = html_entity_decode($project);
         $hourEntry = new ProjectHours();
 
         $pj = $this->projectRepository->findByUserAndName($this->getUser(), $pjn);
@@ -55,7 +56,7 @@ class AddHoursController extends AbstractController
 
         $handled = $this->hourManager->handleAddHoursForm($form, $hourEntry, $pj);
 
-        switch($handled){
+        switch ($handled) {
             case 'notHandled':
                 $this->addFlash('error', 'End time must be later than start time!');
                 break;
@@ -66,7 +67,39 @@ class AddHoursController extends AbstractController
 
         return $this->render('add_hours/index.html.twig', [
             'hours_form' => $form->createView(),
-            'projectId' => $pj->getId()
+            'projectId'  => $pj->getId()
         ]);
+    }
+
+    /**
+     * renders are you sure to delete this hour entry page
+     *
+     * @param int $projectId
+     * @param int $hoursId
+     * @return Response
+     * @Route("projects/{projectId}/{hoursId}/delete", name="app_hour_delete")
+     */
+    public function DeleteHours(int $projectId, int $hoursId): Response
+    {
+        $hour = $this->getDoctrine()->getManager()->getRepository(ProjectHours::class)->findOneBy(['id' => $hoursId]);
+
+        return $this->render('deletion/deleteHour.html.twig', [
+            'projectId' => $projectId,
+            'hour'      => $hour
+        ]);
+    }
+
+    /**
+     * Retrieves the specific hour to be deleted and deletes it
+     * @Route("projects/{projectId}/{hoursId}/deletedHour", name="app_hour_deleted", defaults={"pj" = "DELETED_HOUR"})
+     */
+    public function DeletedHours(int $projectId, int $hoursId): RedirectResponse
+    {
+        $em   = $this->getDoctrine()->getManager();
+        $hour = $em->getRepository(ProjectHours::class)->findOneBy(['id' => $hoursId]);
+
+        $em->remove($hour);
+        $em->flush();
+        return $this->redirectToRoute('app_project', ['projectId' => $projectId]);
     }
 }
